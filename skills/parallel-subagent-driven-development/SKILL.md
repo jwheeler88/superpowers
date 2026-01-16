@@ -341,3 +341,31 @@ digraph complete_flow {
 - Rebase before merge
 - Re-run quality review after conflict resolution
 - Clean up worktrees immediately after merge
+
+## Integration
+
+**Required skills:**
+- **superpowers:writing-plans** - Creates the plan this skill executes
+- **superpowers:using-git-worktrees** - Worktree creation patterns
+- **superpowers:requesting-code-review** - Review templates
+- **superpowers:finishing-a-development-branch** - Completion workflow
+
+**Subagents use:**
+- **superpowers:test-driven-development** - Implementation approach
+
+**Prompt templates:**
+- `./implementer-prompt.md` - Implementer subagent (same as subagent-driven-development)
+- `./spec-reviewer-prompt.md` - Spec compliance reviewer (same as subagent-driven-development)
+- `./code-quality-reviewer-prompt.md` - Code quality reviewer (same as subagent-driven-development)
+- `./resolver-prompt.md` - Conflict resolver subagent (new)
+
+## Comparison with subagent-driven-development
+
+| Aspect | subagent-driven-development | parallel-subagent-driven-development |
+|--------|----------------------------|--------------------------------------|
+| Execution | Sequential (one task at a time) | Parallel within groups |
+| Isolation | Single working directory | One worktree per task |
+| Review | After each task | After each task (in parallel) |
+| Merge | Single branch | Direct to main per task |
+| Speed | Slower | Faster for independent tasks |
+| Debugging | Simpler (linear timeline) | More complex (concurrent timeline) |
