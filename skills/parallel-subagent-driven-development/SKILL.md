@@ -281,3 +281,32 @@ Dispatch final code reviewer for entire implementation:
 **Step 6.2: Finish up**
 
 Use `superpowers:finishing-a-development-branch` to complete.
+
+## Complete Flow Diagram
+
+```dot
+digraph complete_flow {
+    rankdir=TB;
+
+    "1. Read plan, analyze dependencies, identify parallel groups" [shape=box];
+    "2. For current group: create worktrees" [shape=box];
+    "3. Dispatch implementers in parallel (single message, multiple Tasks)" [shape=box];
+    "As each finishes: spec review -> quality review" [shape=box];
+    "When reviews pass: rebase -> merge to main -> cleanup worktree" [shape=box];
+    "All tasks in group merged?" [shape=diamond];
+    "More groups?" [shape=diamond];
+    "Final code review" [shape=box];
+    "superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+
+    "1. Read plan, analyze dependencies, identify parallel groups" -> "2. For current group: create worktrees";
+    "2. For current group: create worktrees" -> "3. Dispatch implementers in parallel (single message, multiple Tasks)";
+    "3. Dispatch implementers in parallel (single message, multiple Tasks)" -> "As each finishes: spec review -> quality review";
+    "As each finishes: spec review -> quality review" -> "When reviews pass: rebase -> merge to main -> cleanup worktree";
+    "When reviews pass: rebase -> merge to main -> cleanup worktree" -> "All tasks in group merged?";
+    "All tasks in group merged?" -> "More groups?" [label="yes"];
+    "All tasks in group merged?" -> "As each finishes: spec review -> quality review" [label="no - wait"];
+    "More groups?" -> "2. For current group: create worktrees" [label="yes"];
+    "More groups?" -> "Final code review" [label="no"];
+    "Final code review" -> "superpowers:finishing-a-development-branch";
+}
+```
