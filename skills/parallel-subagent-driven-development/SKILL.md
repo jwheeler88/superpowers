@@ -228,3 +228,41 @@ If rebase has conflicts:
 **Cleanup is immediate:** Worktree deleted right after successful merge. No lingering branches.
 
 **Mark task complete:** Update TodoWrite to show task completed.
+
+### Phase 5: Next Parallel Group
+
+Once all tasks in a parallel group have merged, move to the next group.
+
+**Step 5.1: Wait for group completion**
+
+All tasks in current group must be merged to main before starting next group.
+
+```
+Group A complete (Tasks 1, 3, 4 merged to main)
+  |
+  v
+Group B starts: Task 2 (depends on Task 1)
+```
+
+**Step 5.2: Create worktrees from latest main**
+
+New worktrees branch from main, which now includes all previous group's work:
+
+```bash
+# Task 2 needs Task 1's code - now in main
+git worktree add .worktrees/task-2-auth-middleware -b task-2-auth-middleware
+```
+
+**Step 5.3: Repeat Phases 2-4**
+
+Dispatch implementers, review, merge - same as before.
+
+**Step 5.4: Continue until all groups complete**
+
+```
+Group B complete (Task 2 merged)
+  |
+  v
+Group C starts: Task 5 (depends on Tasks 1, 2 - both now in main)
+  ...
+```
