@@ -1,3 +1,29 @@
+# Parallel Subagent-Driven Development Implementation Plan
+
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+
+**Goal:** Create a new skill that extends subagent-driven-development to run independent tasks concurrently in isolated git worktrees.
+
+**Architecture:** Skill analyzes plan dependencies upfront to identify parallel groups, creates isolated worktrees per task, dispatches implementer subagents in parallel, runs two-stage review pipeline as tasks complete, and merges directly to main with conflict resolution.
+
+**Tech Stack:** Markdown skill files, bash commands for git worktree management, Task tool for parallel subagent dispatch.
+
+---
+
+## Task 1: Create Skill Directory Structure
+
+**Files:**
+- Create: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Create directory**
+
+```bash
+mkdir -p skills/parallel-subagent-driven-development
+```
+
+**Step 2: Create SKILL.md with frontmatter and overview**
+
+```markdown
 ---
 name: parallel-subagent-driven-development
 description: Use when executing implementation plans with many independent tasks - runs tasks concurrently in isolated worktrees
@@ -10,7 +36,27 @@ Execute plan by running independent tasks concurrently, each in its own git work
 **Core principle:** Dependency-aware scheduling + worktree isolation + per-task review pipeline = parallel execution without conflicts.
 
 **Announce at start:** "I'm using parallel-subagent-driven-development to execute this plan with concurrent task execution."
+```
 
+**Step 3: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: create parallel-subagent-driven-development skill directory"
+```
+
+---
+
+## Task 2: Add When to Use Decision Flow
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add When to Use section with decision graph**
+
+Append to SKILL.md after overview:
+
+```markdown
 ## When to Use
 
 ```dot
@@ -44,7 +90,27 @@ digraph when_to_use {
 - Tasks are tightly coupled (most depend on each other)
 - Want simpler debugging (single timeline)
 - Plan has mostly sequential dependencies
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add when-to-use decision flow"
+```
+
+---
+
+## Task 3: Add Phase 1 - Plan Analysis
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add Phase 1 section**
+
+Append to SKILL.md:
+
+```markdown
 ## The Process
 
 ### Phase 1: Plan Analysis
@@ -102,14 +168,32 @@ Create TodoWrite showing all tasks with their group:
 - [Group B] Task 2: Add auth middleware
 - [Group C] Task 5: Add auth routes
 ```
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add Phase 1 plan analysis"
+```
+
+---
+
+## Task 4: Add Phase 2 - Worktree Setup and Dispatch
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add Phase 2 section**
+
+Append to SKILL.md:
+
+```markdown
 ### Phase 2: Worktree Setup & Dispatch
 
 For each parallel group, set up isolated workspaces and dispatch implementers.
 
 **Step 2.1: Create worktrees for group**
-
-Follow `superpowers:using-git-worktrees` safety checks (verify `.worktrees` is in `.gitignore`).
 
 Create one worktree per task in the current group:
 
@@ -141,7 +225,27 @@ Each implementer:
 - Uses `./implementer-prompt.md` template
 - Follows TDD, implements, tests, commits
 - Self-reviews and reports back
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add Phase 2 worktree setup and dispatch"
+```
+
+---
+
+## Task 5: Add Phase 3 - Per-Task Review Pipeline
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add Phase 3 section**
+
+Append to SKILL.md:
+
+```markdown
 ### Phase 3: Per-Task Review Pipeline
 
 As implementers finish (in any order), immediately start that task's review pipeline.
@@ -194,7 +298,27 @@ Timeline example:
   Task 1: [implement.....] [spec-review] [fix] [spec-review] [quality-review] [ready]
   Task 4: [implement...........] [spec-review] [quality-review] [ready]
 ```
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add Phase 3 per-task review pipeline"
+```
+
+---
+
+## Task 6: Add Phase 4 - Merge and Cleanup
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add Phase 4 section**
+
+Append to SKILL.md:
+
+```markdown
 ### Phase 4: Merge & Cleanup
 
 When a task passes both reviews, merge it to main.
@@ -230,7 +354,27 @@ If rebase has conflicts:
 **Cleanup is immediate:** Worktree deleted right after successful merge. No lingering branches.
 
 **Mark task complete:** Update TodoWrite to show task completed.
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add Phase 4 merge and cleanup"
+```
+
+---
+
+## Task 7: Add Phase 5 - Next Parallel Group
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add Phase 5 section**
+
+Append to SKILL.md:
+
+```markdown
 ### Phase 5: Next Parallel Group
 
 Once all tasks in a parallel group have merged, move to the next group.
@@ -268,7 +412,27 @@ Group B complete (Task 2 merged)
 Group C starts: Task 5 (depends on Tasks 1, 2 - both now in main)
   ...
 ```
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add Phase 5 next parallel group"
+```
+
+---
+
+## Task 8: Add Phase 6 - Final Review
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add Phase 6 section**
+
+Append to SKILL.md:
+
+```markdown
 ### Phase 6: Final Review & Finish
 
 After all groups complete:
@@ -283,7 +447,27 @@ Dispatch final code reviewer for entire implementation:
 **Step 6.2: Finish up**
 
 Use `superpowers:finishing-a-development-branch` to complete.
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add Phase 6 final review"
+```
+
+---
+
+## Task 9: Add Complete Flow Diagram
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add flow diagram section**
+
+Append to SKILL.md:
+
+```markdown
 ## Complete Flow Diagram
 
 ```dot
@@ -312,7 +496,27 @@ digraph complete_flow {
     "Final code review" -> "superpowers:finishing-a-development-branch";
 }
 ```
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add complete flow diagram"
+```
+
+---
+
+## Task 10: Add Error Handling Section
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add error handling section**
+
+Append to SKILL.md:
+
+```markdown
 ## Error Handling
 
 | Scenario | Action |
@@ -323,7 +527,210 @@ digraph complete_flow {
 | Rebase conflicts | Dispatch resolver subagent, then re-run quality review |
 | Unrecoverable error | Stop, report to user, preserve worktree for debugging |
 | File conflict detected | Fall back to sequential for conflicting tasks |
+```
 
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add error handling section"
+```
+
+---
+
+## Task 11: Add Red Flags Section
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add red flags section**
+
+Append to SKILL.md:
+
+```markdown
+## Red Flags
+
+**Never:**
+- Dispatch parallel implementers in separate messages (must be single message)
+- Skip dependency analysis (causes merge conflicts)
+- Start next group before current group fully merged
+- Skip reviews (spec compliance OR code quality)
+- Proceed with unfixed review issues
+- Delete worktree before merge confirmed
+- Force merge without rebase
+- Skip conflict resolution re-review
+
+**Always:**
+- Analyze dependencies before dispatching
+- Use single message for parallel Task calls
+- Wait for group completion before next group
+- Rebase before merge
+- Re-run quality review after conflict resolution
+- Clean up worktrees immediately after merge
+```
+
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add red flags section"
+```
+
+---
+
+## Task 12: Add Integration Section
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add integration section**
+
+Append to SKILL.md:
+
+```markdown
+## Integration
+
+**Required skills:**
+- **superpowers:writing-plans** - Creates the plan this skill executes
+- **superpowers:using-git-worktrees** - Worktree creation patterns
+- **superpowers:requesting-code-review** - Review templates
+- **superpowers:finishing-a-development-branch** - Completion workflow
+
+**Subagents use:**
+- **superpowers:test-driven-development** - Implementation approach
+
+**Prompt templates:**
+- `./implementer-prompt.md` - Implementer subagent (same as subagent-driven-development)
+- `./spec-reviewer-prompt.md` - Spec compliance reviewer (same as subagent-driven-development)
+- `./code-quality-reviewer-prompt.md` - Code quality reviewer (same as subagent-driven-development)
+- `./resolver-prompt.md` - Conflict resolver subagent (new)
+
+## Comparison with subagent-driven-development
+
+| Aspect | subagent-driven-development | parallel-subagent-driven-development |
+|--------|----------------------------|--------------------------------------|
+| Execution | Sequential (one task at a time) | Parallel within groups |
+| Isolation | Single working directory | One worktree per task |
+| Review | After each task | After each task (in parallel) |
+| Merge | Single branch | Direct to main per task |
+| Speed | Slower | Faster for independent tasks |
+| Debugging | Simpler (linear timeline) | More complex (concurrent timeline) |
+```
+
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add integration section"
+```
+
+---
+
+## Task 13: Create Resolver Prompt Template
+
+**Files:**
+- Create: `skills/parallel-subagent-driven-development/resolver-prompt.md`
+
+**Step 1: Create resolver prompt file**
+
+```markdown
+# Resolver Subagent Prompt Template
+
+Use this template when dispatching a resolver subagent to fix rebase conflicts.
+
+**Purpose:** Resolve merge conflicts that occur when rebasing a task branch onto main.
+
+```
+Task tool (general-purpose):
+  description: "Resolve conflicts for Task N"
+  prompt: |
+    You are resolving merge conflicts from rebasing a task branch onto main.
+
+    ## Context
+
+    Task N: [task name] was implemented and passed both reviews.
+    During rebase onto latest main, conflicts occurred.
+
+    ## Conflict Details
+
+    [Output from git rebase showing conflicts]
+
+    Files with conflicts:
+    [List of conflicting files]
+
+    ## Your Job
+
+    1. Understand what the task implemented (from commit messages/diff)
+    2. Understand what changed in main (the other side of conflict)
+    3. Resolve conflicts preserving both:
+       - The task's new functionality
+       - Main's updates from other merged tasks
+    4. Complete the rebase
+    5. Run tests to verify resolution works
+
+    ## Resolution Guidelines
+
+    - Preserve the intent of both changes
+    - If both added to same location, include both (in logical order)
+    - If both modified same code, merge the logic correctly
+    - Never silently drop either side's changes
+
+    ## Report Format
+
+    When done, report:
+    - What conflicts you resolved
+    - How you merged the changes
+    - Test results after resolution
+    - Any concerns about the resolution
+```
+```
+
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/resolver-prompt.md
+git commit -m "feat: add resolver prompt template"
+```
+
+---
+
+## Task 14: Symlink Shared Prompt Templates
+
+**Files:**
+- Create: `skills/parallel-subagent-driven-development/implementer-prompt.md` (symlink)
+- Create: `skills/parallel-subagent-driven-development/spec-reviewer-prompt.md` (symlink)
+- Create: `skills/parallel-subagent-driven-development/code-quality-reviewer-prompt.md` (symlink)
+
+**Step 1: Create symlinks to shared templates**
+
+```bash
+cd skills/parallel-subagent-driven-development
+ln -s ../subagent-driven-development/implementer-prompt.md implementer-prompt.md
+ln -s ../subagent-driven-development/spec-reviewer-prompt.md spec-reviewer-prompt.md
+ln -s ../subagent-driven-development/code-quality-reviewer-prompt.md code-quality-reviewer-prompt.md
+```
+
+**Step 2: Commit**
+
+```bash
+git add skills/parallel-subagent-driven-development/implementer-prompt.md
+git add skills/parallel-subagent-driven-development/spec-reviewer-prompt.md
+git add skills/parallel-subagent-driven-development/code-quality-reviewer-prompt.md
+git commit -m "feat: symlink shared prompt templates from subagent-driven-development"
+```
+
+---
+
+## Task 15: Add Example Workflow
+
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md`
+
+**Step 1: Add example workflow section**
+
+Append to SKILL.md before Red Flags:
+
+```markdown
 ## Example Workflow
 
 ```
@@ -401,51 +808,80 @@ Using finishing-a-development-branch skill...
 
 Done!
 ```
+```
 
-## Red Flags
+**Step 2: Commit**
 
-**Never:**
-- Dispatch parallel implementers in separate messages (must be single message)
-- Skip dependency analysis (causes merge conflicts)
-- Start next group before current group fully merged
-- Skip reviews (spec compliance OR code quality)
-- Proceed with unfixed review issues
-- Delete worktree before merge confirmed
-- Force merge without rebase
-- Skip conflict resolution re-review
+```bash
+git add skills/parallel-subagent-driven-development/SKILL.md
+git commit -m "feat: add example workflow"
+```
 
-**Always:**
-- Analyze dependencies before dispatching
-- Use single message for parallel Task calls
-- Wait for group completion before next group
-- Rebase before merge
-- Re-run quality review after conflict resolution
-- Clean up worktrees immediately after merge
+---
 
-## Integration
+## Task 16: Update Version and Create PR
 
-**Required skills:**
-- **superpowers:writing-plans** - Creates the plan this skill executes
-- **superpowers:using-git-worktrees** - Worktree creation patterns
-- **superpowers:requesting-code-review** - Review templates
-- **superpowers:finishing-a-development-branch** - Completion workflow
+**Files:**
+- Modify: `skills/parallel-subagent-driven-development/SKILL.md` (final review)
 
-**Subagents use:**
-- **superpowers:test-driven-development** - Implementation approach
+**Step 1: Read complete SKILL.md and verify**
 
-**Prompt templates:**
-- `./implementer-prompt.md` - Implementer subagent (same as subagent-driven-development)
-- `./spec-reviewer-prompt.md` - Spec compliance reviewer (same as subagent-driven-development)
-- `./code-quality-reviewer-prompt.md` - Code quality reviewer (same as subagent-driven-development)
-- `./resolver-prompt.md` - Conflict resolver subagent (new)
+Read the complete file to verify all sections are present and correctly formatted.
 
-## Comparison with subagent-driven-development
+**Step 2: Run tests (if any)**
 
-| Aspect | subagent-driven-development | parallel-subagent-driven-development |
-|--------|----------------------------|--------------------------------------|
-| Execution | Sequential (one task at a time) | Parallel within groups |
-| Isolation | Single working directory | One worktree per task |
-| Review | After each task | After each task (in parallel) |
-| Merge | Single branch | Direct to main per task |
-| Speed | Slower | Faster for independent tasks |
-| Debugging | Simpler (linear timeline) | More complex (concurrent timeline) |
+```bash
+# Check for any skill tests
+ls tests/
+```
+
+**Step 3: Final commit if any fixes needed**
+
+```bash
+git add -A
+git commit -m "feat: finalize parallel-subagent-driven-development skill"
+```
+
+**Step 4: Push and create PR**
+
+```bash
+git push -u origin feat/parallel-dispatch
+gh pr create --title "feat: add parallel-subagent-driven-development skill" --body "$(cat <<'EOF'
+## Summary
+- Adds new skill for parallel plan execution with worktree isolation
+- Analyzes dependencies to identify parallel groups
+- Dispatches concurrent implementers, runs reviews in parallel
+- Merges directly to main with conflict resolution
+
+## Test plan
+- [ ] Verify SKILL.md renders correctly
+- [ ] Test skill on a multi-task plan
+- [ ] Verify symlinks work for prompt templates
+
+Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+```
+
+---
+
+## Summary
+
+| Task | Description | Files |
+|------|-------------|-------|
+| 1 | Create directory and base SKILL.md | skills/parallel-subagent-driven-development/SKILL.md |
+| 2 | Add when-to-use decision flow | SKILL.md |
+| 3 | Add Phase 1 - plan analysis | SKILL.md |
+| 4 | Add Phase 2 - worktree setup and dispatch | SKILL.md |
+| 5 | Add Phase 3 - per-task review pipeline | SKILL.md |
+| 6 | Add Phase 4 - merge and cleanup | SKILL.md |
+| 7 | Add Phase 5 - next parallel group | SKILL.md |
+| 8 | Add Phase 6 - final review | SKILL.md |
+| 9 | Add complete flow diagram | SKILL.md |
+| 10 | Add error handling | SKILL.md |
+| 11 | Add red flags | SKILL.md |
+| 12 | Add integration section | SKILL.md |
+| 13 | Create resolver prompt template | resolver-prompt.md |
+| 14 | Symlink shared prompt templates | symlinks |
+| 15 | Add example workflow | SKILL.md |
+| 16 | Final review and PR | PR |

@@ -15,6 +15,8 @@ Task tool (general-purpose):
     Task N: [task name] was implemented and passed both reviews.
     During rebase onto latest main, conflicts occurred.
 
+    Work from: [worktree path, e.g., .worktrees/task-N-name]
+
     ## Conflict Details
 
     [Output from git rebase showing conflicts]
