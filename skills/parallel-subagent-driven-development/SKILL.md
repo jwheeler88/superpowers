@@ -139,3 +139,56 @@ Each implementer:
 - Uses `./implementer-prompt.md` template
 - Follows TDD, implements, tests, commits
 - Self-reviews and reports back
+
+### Phase 3: Per-Task Review Pipeline
+
+As implementers finish (in any order), immediately start that task's review pipeline.
+
+**Step 3.1: Monitor for completion**
+
+Watch for implementer subagents to return. Process completions as they arrive - don't wait for all.
+
+**Step 3.2: Start spec review**
+
+When an implementer finishes:
+
+```
+Task 3 finishes first:
+  -> Dispatch spec reviewer for Task 3 (./spec-reviewer-prompt.md)
+```
+
+**Step 3.3: Spec review loop**
+
+If spec reviewer finds issues:
+1. Dispatch implementer to fix (same worktree)
+2. Re-run spec review
+3. Repeat until spec compliant
+
+**Step 3.4: Start code quality review**
+
+After spec passes:
+
+```
+  -> Spec passes
+  -> Dispatch code quality reviewer for Task 3 (./code-quality-reviewer-prompt.md)
+```
+
+**Step 3.5: Code quality loop**
+
+If code quality reviewer finds issues:
+1. Dispatch implementer to fix (same worktree)
+2. Re-run code quality review
+3. Repeat until approved
+
+**Step 3.6: Mark ready to merge**
+
+When both reviews pass, task is ready for Phase 4.
+
+**Parallelism in reviews:** Reviews for different tasks can run in parallel. Task 3's code quality review can happen while Task 1's spec review is running.
+
+```
+Timeline example:
+  Task 3: [implement] [spec-review] [quality-review] [ready]
+  Task 1: [implement.....] [spec-review] [fix] [spec-review] [quality-review] [ready]
+  Task 4: [implement...........] [spec-review] [quality-review] [ready]
+```
