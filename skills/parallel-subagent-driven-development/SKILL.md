@@ -310,3 +310,14 @@ digraph complete_flow {
     "Final code review" -> "superpowers:finishing-a-development-branch";
 }
 ```
+
+## Error Handling
+
+| Scenario | Action |
+|----------|--------|
+| Implementer fails | Dispatch fix subagent in same worktree |
+| Spec review fails | Implementer fixes, re-review |
+| Code quality review fails | Implementer fixes, re-review |
+| Rebase conflicts | Dispatch resolver subagent, then re-run quality review |
+| Unrecoverable error | Stop, report to user, preserve worktree for debugging |
+| File conflict detected | Fall back to sequential for conflicting tasks |
