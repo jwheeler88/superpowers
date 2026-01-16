@@ -192,3 +192,39 @@ Timeline example:
   Task 1: [implement.....] [spec-review] [fix] [spec-review] [quality-review] [ready]
   Task 4: [implement...........] [spec-review] [quality-review] [ready]
 ```
+
+### Phase 4: Merge & Cleanup
+
+When a task passes both reviews, merge it to main.
+
+**Step 4.1: Rebase onto latest main**
+
+```bash
+cd .worktrees/task-3-logging
+git fetch origin main
+git rebase origin/main
+```
+
+**Step 4.2: Handle rebase success**
+
+If rebase succeeds (no conflicts):
+
+```bash
+git checkout main
+git merge task-3-logging --ff-only
+git push origin main
+git worktree remove .worktrees/task-3-logging
+git branch -d task-3-logging
+```
+
+**Step 4.3: Handle rebase conflicts**
+
+If rebase has conflicts:
+1. Dispatch resolver subagent with conflict details (./resolver-prompt.md)
+2. Resolver fixes conflicts, commits
+3. Re-run code quality review (spec still valid)
+4. Then merge as above
+
+**Cleanup is immediate:** Worktree deleted right after successful merge. No lingering branches.
+
+**Mark task complete:** Update TodoWrite to show task completed.
