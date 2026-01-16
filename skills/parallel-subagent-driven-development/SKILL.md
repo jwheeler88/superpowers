@@ -321,3 +321,23 @@ digraph complete_flow {
 | Rebase conflicts | Dispatch resolver subagent, then re-run quality review |
 | Unrecoverable error | Stop, report to user, preserve worktree for debugging |
 | File conflict detected | Fall back to sequential for conflicting tasks |
+
+## Red Flags
+
+**Never:**
+- Dispatch parallel implementers in separate messages (must be single message)
+- Skip dependency analysis (causes merge conflicts)
+- Start next group before current group fully merged
+- Skip reviews (spec compliance OR code quality)
+- Proceed with unfixed review issues
+- Delete worktree before merge confirmed
+- Force merge without rebase
+- Skip conflict resolution re-review
+
+**Always:**
+- Analyze dependencies before dispatching
+- Use single message for parallel Task calls
+- Wait for group completion before next group
+- Rebase before merge
+- Re-run quality review after conflict resolution
+- Clean up worktrees immediately after merge
