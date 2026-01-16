@@ -102,3 +102,40 @@ Create TodoWrite showing all tasks with their group:
 - [Group B] Task 2: Add auth middleware
 - [Group C] Task 5: Add auth routes
 ```
+
+### Phase 2: Worktree Setup & Dispatch
+
+For each parallel group, set up isolated workspaces and dispatch implementers.
+
+**Step 2.1: Create worktrees for group**
+
+Create one worktree per task in the current group:
+
+```bash
+# Example for Group A
+git worktree add .worktrees/task-1-user-model -b task-1-user-model
+git worktree add .worktrees/task-3-logging -b task-3-logging
+git worktree add .worktrees/task-4-rate-limiter -b task-4-rate-limiter
+```
+
+**Step 2.2: Verify worktree isolation**
+
+If dependency analysis missed a file conflict (two tasks touch same file), fall back to sequential execution for those tasks.
+
+**Step 2.3: Dispatch implementers in parallel**
+
+Send a **single message with multiple Task tool calls** to run implementers concurrently:
+
+```
+Task("Implement Task 1: Add user model", work_dir=".worktrees/task-1-user-model")
+Task("Implement Task 3: Add logging utility", work_dir=".worktrees/task-3-logging")
+Task("Implement Task 4: Add rate limiter", work_dir=".worktrees/task-4-rate-limiter")
+```
+
+**CRITICAL:** All Task calls must be in the same message for true parallel execution.
+
+Each implementer:
+- Works in its isolated worktree
+- Uses `./implementer-prompt.md` template
+- Follows TDD, implements, tests, commits
+- Self-reviews and reports back
