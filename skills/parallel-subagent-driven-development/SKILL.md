@@ -322,6 +322,84 @@ digraph complete_flow {
 | Unrecoverable error | Stop, report to user, preserve worktree for debugging |
 | File conflict detected | Fall back to sequential for conflicting tasks |
 
+## Example Workflow
+
+```
+You: I'm using parallel-subagent-driven-development to execute this plan.
+
+[Phase 1: Analyze plan]
+- Task 1: Add user model (creates: src/models/user.ts)
+- Task 2: Add auth middleware (modifies: src/middleware/index.ts, uses Task 1)
+- Task 3: Add logging utility (creates: src/utils/logger.ts)
+- Task 4: Add rate limiter (creates: src/middleware/rateLimiter.ts)
+- Task 5: Add auth routes (uses Task 1 & 2)
+
+Dependency analysis:
+- Task 2 depends on Task 1 (uses User model)
+- Task 5 depends on Task 1 & 2
+
+Parallel groups:
+- Group A: [1, 3, 4] - all independent
+- Group B: [2] - needs Task 1
+- Group C: [5] - needs Task 2
+
+[Phase 2: Group A]
+Creating worktrees...
+  git worktree add .worktrees/task-1-user-model -b task-1-user-model
+  git worktree add .worktrees/task-3-logging -b task-3-logging
+  git worktree add .worktrees/task-4-rate-limiter -b task-4-rate-limiter
+
+Dispatching implementers in parallel (single message, 3 Task calls)...
+
+[Task 3 completes first]
+Spec review for Task 3... ✅ Compliant
+Code quality review for Task 3... ✅ Approved
+Rebasing Task 3... clean
+Merging Task 3 to main... done
+Cleaning up .worktrees/task-3-logging
+
+[Task 1 completes]
+Spec review for Task 1... ❌ Missing validation
+Implementer fixing...
+Spec review for Task 1... ✅ Compliant
+Code quality review... ✅ Approved
+Rebasing Task 1... clean
+Merging Task 1 to main... done
+Cleaning up .worktrees/task-1-user-model
+
+[Task 4 completes]
+Spec review for Task 4... ✅ Compliant
+Code quality review... ✅ Approved
+Rebasing Task 4... conflict in src/middleware/index.ts
+Dispatching resolver...
+Resolver: Merged both rate limiter and existing middleware exports
+Quality re-review... ✅ Approved
+Merging Task 4 to main... done
+Cleaning up .worktrees/task-4-rate-limiter
+
+Group A complete!
+
+[Phase 2: Group B]
+Creating worktree from latest main (includes Task 1's User model)...
+  git worktree add .worktrees/task-2-auth-middleware -b task-2-auth-middleware
+
+Dispatching implementer for Task 2...
+
+[Task 2 completes]
+Reviews pass, merge to main, cleanup.
+
+Group B complete!
+
+[Phase 2: Group C]
+...similar...
+
+[Phase 6]
+Final code review... ✅ All integrated correctly
+Using finishing-a-development-branch skill...
+
+Done!
+```
+
 ## Red Flags
 
 **Never:**
