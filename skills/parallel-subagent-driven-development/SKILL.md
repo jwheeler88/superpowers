@@ -266,3 +266,18 @@ Group B complete (Task 2 merged)
 Group C starts: Task 5 (depends on Tasks 1, 2 - both now in main)
   ...
 ```
+
+### Phase 6: Final Review & Finish
+
+After all groups complete:
+
+**Step 6.1: Final code review**
+
+Dispatch final code reviewer for entire implementation:
+- Review all commits since plan started
+- Verify cohesive integration
+- Check for cross-task issues
+
+**Step 6.2: Finish up**
+
+Use `superpowers:finishing-a-development-branch` to complete.
