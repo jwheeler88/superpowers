@@ -44,3 +44,61 @@ digraph when_to_use {
 - Tasks are tightly coupled (most depend on each other)
 - Want simpler debugging (single timeline)
 - Plan has mostly sequential dependencies
+
+## The Process
+
+### Phase 1: Plan Analysis
+
+Before dispatching any implementers, analyze the plan to identify what can run in parallel.
+
+**Step 1.1: Extract all tasks**
+
+Read the plan file and extract every task with:
+- Task number and name
+- Full task text
+- Files it will create/modify
+
+**Step 1.2: Analyze dependencies**
+
+For each pair of tasks, check for:
+- **Explicit dependencies:** "This task requires Task 2's API"
+- **File conflicts:** Two tasks modify the same file
+- **Inferred dependencies:** Task B uses a function Task A creates
+
+**Step 1.3: Build dependency graph**
+
+```
+Example with 5 tasks:
+- Task 1: Add user model (independent)
+- Task 2: Add auth middleware (depends on Task 1)
+- Task 3: Add logging utility (independent)
+- Task 4: Add rate limiter (independent)
+- Task 5: Add auth routes (depends on Task 1, Task 2)
+
+Dependencies:
+  Task 2 -> Task 1
+  Task 5 -> Task 1, Task 2
+```
+
+**Step 1.4: Identify parallel groups**
+
+Group tasks into waves that can run concurrently:
+
+```
+Parallel groups:
+  Group A: [Task 1, Task 3, Task 4]  <- run in parallel
+  Group B: [Task 2]                   <- after Task 1
+  Group C: [Task 5]                   <- after Task 2
+```
+
+**Step 1.5: Create TodoWrite with groups**
+
+Create TodoWrite showing all tasks with their group:
+
+```
+- [Group A] Task 1: Add user model
+- [Group A] Task 3: Add logging utility
+- [Group A] Task 4: Add rate limiter
+- [Group B] Task 2: Add auth middleware
+- [Group C] Task 5: Add auth routes
+```
